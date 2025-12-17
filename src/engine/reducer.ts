@@ -2,6 +2,7 @@ import {Action, GameState, Seat} from "./types.js";
 
 export function applyAction(state: GameState, action: Action): GameState {
     switch (action.type) {
+
         case "DEAL_ONE": {
             if (state.phase !== "DEAL") {
                 throw new Error(`cannot deal in phase ${state.phase}`);
@@ -49,9 +50,44 @@ export function applyAction(state: GameState, action: Action): GameState {
             };
         }
 
-        case "DECLARE_TRUMP":
-            // implement next
-            return state;
+        case "DECLARE_TRUMP": {
+            if (state.phase !== "DEAL") {
+                throw new Error(`cannot declare trump in phase ${state.phase}`);
+            }
+            if (state.trumpLocked) {
+                throw new Error("cannot declare trump: trump is locked");
+            }
+
+            const { seat, cardId } = action;
+
+            const card = state.cardsById[cardId];
+            if (!card) {
+                throw new Error(`cannot declare trump: unknown cardId ${cardId}`);
+            }
+
+            const hand = state.hands[seat];
+            if (!hand.includes(cardId)) {
+                throw new Error("cannot declare trump: card is not in seat hand");
+            }
+
+            if (card.kind !== "normal") {
+                throw new Error("cannot declare trump: must declare with a suited level card");
+            }
+
+            if (card.rank !== state.levelRank) {
+                throw new Error(
+                    `cannot declare trump: must declare with level rank ${state.levelRank}`
+                );
+            }
+
+            return {
+                ...state,
+                trumpSuit: card.suit,
+                trumpLocked: true,
+                // if declarer should become round leader, uncomment:
+                // roundLeader: seat,
+            };
+        }
 
         case "OVERRIDE_TRUMP":
             // implement next

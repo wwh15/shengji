@@ -1,24 +1,48 @@
-import { initialState } from "./engine/state.js";
 import { applyAction } from "./engine/reducer.js";
-
-function sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import type { GameState } from "./engine/types.js";
+import { initialState } from "./engine/state.js";
 
 async function main() {
-    let s = initialState(12345);
+    let state: GameState = initialState(12345);
 
-    while (s.phase === "DEAL") {
-        s = applyAction(s, { type: "DEAL_ONE" });
-        console.log(`dealt card ${s.dealIndex}/100 to seat ${((s.dealTo + 3) % 4) as 0|1|2|3}`);
-        await sleep(150);
+    console.log("starting deal");
+
+    while (state.phase === "DEAL") {
+        // peek before deal
+        const seat = state.dealTo;
+        const cardId = state.deck[state.dealIndex];
+
+        state = applyAction(state, { type: "DEAL_ONE" });
+
+        const card = state.cardsById[cardId];
+        const canDeclare =
+            !state.trumpLocked &&
+            card?.kind === "normal" &&
+            card.rank === state.levelRank;
+
+        if (canDeclare) {
+            state = applyAction(state, {
+                type: "DECLARE_TRUMP",
+                seat,
+                cardId,
+            });
+
+            console.log(
+                `trump declared: ${state.trumpSuit} by seat ${seat} with ${cardId}`
+            );
+        }
     }
 
-    console.log("done dealing");
+    console.log("final state snapshot:");
+    console.log({
+        phase: state.phase,
+        trumpSuit: state.trumpSuit,
+        trumpLocked: state.trumpLocked,
+        dealIndex: state.dealIndex,
+    });
 }
 
-main().catch(err => {
+main().catch((err) => {
     console.error(err);
-    process.exit(1);
+    process.exitCode = 1;
 });
-

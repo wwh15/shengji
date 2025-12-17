@@ -7,7 +7,10 @@
     "dev": "tsx src/simulate.ts",
     "check": "tsc -p tsconfig.json --noEmit",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/simulate.js"
+    "start": "node dist/simulate.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:run": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,7 @@
   "devDependencies": {
     "@types/node": "^25.0.3",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }
