@@ -15,7 +15,6 @@ export type Card =
 
 export type Phase =
     | "DEAL"
-    | "TRUMP_SELECTION"
     | "KITTY_PICKUP"
     | "BURY"
     | "TRICK_PLAY"
@@ -25,6 +24,11 @@ export type TrumpSuit = Suit;
 
 export type GameConfig = {
     kittySize: 8;
+};
+
+export type DealResult = {
+    hands: Record<Seat, CardId[]>;
+    kitty: CardId[];
 };
 
 export type GameState = {
@@ -37,11 +41,16 @@ export type GameState = {
 
     // round metadata
     levelRank: Rank; // your "trump #" / current level
-    dealer: Seat;
+    roundLeader: Seat;
 
     // trump selection outcome
     trumpSuit?: TrumpSuit;
     trumpLocked: boolean;
+
+    // deal state
+    deck: CardId[];        // shuffled 108 card ids
+    dealIndex: number;     // next index to deal (0..99)
+    dealTo: Seat;
 
     // piles
     hands: Record<Seat, CardId[]>;
@@ -53,6 +62,7 @@ export type GameState = {
 };
 
 export type Action =
+    | { type: "DEAL_ONE"}
     | { type: "DECLARE_TRUMP"; seat: Seat; cardId: CardId }
     | { type: "OVERRIDE_TRUMP"; seat: Seat; cardIds: [CardId, CardId] }
     | { type: "PICKUP_KITTY"; seat: Seat }
