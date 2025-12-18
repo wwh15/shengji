@@ -3,7 +3,7 @@ import type { GameState } from "./engine/types.js";
 import { initialState } from "./engine/state.js";
 
 async function main() {
-    let state: GameState = initialState(2);
+    let state: GameState = initialState(1);
 
     console.log("starting deal");
 
