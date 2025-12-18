@@ -80,12 +80,14 @@ export function applyAction(state: GameState, action: Action): GameState {
                 );
             }
 
+            const nextRoundLeader = state.roundLeader ?? action.seat;
+
             return {
                 ...state,
                 trumpSuit: card.suit,
                 trumpLocked: true,
                 // if declarer should become round leader, uncomment:
-                // roundLeader: seat,
+                roundLeader: nextRoundLeader,
             };
         }
 

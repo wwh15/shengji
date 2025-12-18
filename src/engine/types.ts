@@ -41,7 +41,7 @@ export type GameState = {
 
     // round metadata
     levelRank: Rank; // your "trump #" / current level
-    roundLeader: Seat;
+    roundLeader?: Seat;
 
     // trump selection outcome
     trumpSuit?: TrumpSuit;

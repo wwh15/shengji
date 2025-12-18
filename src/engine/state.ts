@@ -10,7 +10,6 @@ export function initialState(seed: number): GameState {
     const deck = shuffle(cards.map((c) => c.id), rng);
 
     const levelRank: Rank = "2";
-    const roundLeader: Seat = 0;
 
     const hands: Record<Seat, string[]> = { 0: [], 1: [], 2: [], 3: [] };
 
@@ -21,14 +20,13 @@ export function initialState(seed: number): GameState {
         phase: "DEAL",
 
         levelRank,
-        roundLeader,
 
         trumpSuit: undefined,
         trumpLocked: false,
 
         deck,
         dealIndex: 0,
-        dealTo: roundLeader,
+        dealTo: 0,
 
         hands: hands as Record<Seat, string[]>,
         kitty: [],

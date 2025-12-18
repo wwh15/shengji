@@ -3,7 +3,7 @@ import type { GameState } from "./engine/types.js";
 import { initialState } from "./engine/state.js";
 
 async function main() {
-    let state: GameState = initialState(12345);
+    let state: GameState = initialState(2);
 
     console.log("starting deal");
 
@@ -40,6 +40,7 @@ async function main() {
         trumpLocked: state.trumpLocked,
         dealIndex: state.dealIndex,
     });
+    console.log("round leader is: " + state.roundLeader);
 }
 
 main().catch((err) => {

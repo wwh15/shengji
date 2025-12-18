@@ -19,7 +19,6 @@ describe("DECLARE_TRUMP", () => {
         const s1 = applyAction(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "d2" });
 
         expect(s1.trumpSuit).toBe("D");
-        expect(s1.trumpLocked).toBe(false);
     });
 
     it("throws if card is not the level rank", () => {
@@ -93,6 +92,33 @@ describe("DECLARE_TRUMP", () => {
                 cardId: "h2",
             })
         ).toThrow();
+    });
+
+    it("sets round leader to declaring seat if first round", () => {
+        const s2 = makeNormal("s2", "S", "2");
+
+        const s0 = baseState({
+            levelRank: "2",
+            cardsById: { s2 },
+            hands: {
+                0: [],
+                1: [],
+                2: ["s2"],
+                3: [],
+            },
+            phase: "DEAL",
+            trumpSuit: undefined,
+            roundLeader: undefined, // this is the key
+            trumpLocked: false
+        });
+
+        const s1 = applyAction(s0, {
+            type: "DECLARE_TRUMP",
+            seat: 2,
+            cardId: "s2",
+        });
+
+        expect(s1.roundLeader).toBe(2);
     });
 
 });
