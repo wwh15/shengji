@@ -22,6 +22,7 @@ export function initialState(seed: number): GameState {
         levelRank,
 
         trumpSuit: undefined,
+        trumpDeclared: false,
         trumpLocked: false,
 
         deck,

@@ -17,6 +17,7 @@ async function main() {
         const card = state.cardsById[cardId];
         const canDeclare =
             !state.trumpLocked &&
+            !state.trumpDeclared &&
             card?.kind === "normal" &&
             card.rank === state.levelRank;
 

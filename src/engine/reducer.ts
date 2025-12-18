@@ -54,8 +54,8 @@ export function applyAction(state: GameState, action: Action): GameState {
             if (state.phase !== "DEAL") {
                 throw new Error(`cannot declare trump in phase ${state.phase}`);
             }
-            if (state.trumpLocked) {
-                throw new Error("cannot declare trump: trump is locked");
+            if (state.trumpLocked || state.trumpDeclared) {
+                throw new Error("cannot declare trump: trump is established already");
             }
 
             const { seat, cardId } = action;
@@ -85,7 +85,7 @@ export function applyAction(state: GameState, action: Action): GameState {
             return {
                 ...state,
                 trumpSuit: card.suit,
-                trumpLocked: true,
+                trumpDeclared: true,
                 // if declarer should become round leader, uncomment:
                 roundLeader: nextRoundLeader,
             };

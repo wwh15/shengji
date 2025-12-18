@@ -45,6 +45,7 @@ export type GameState = {
 
     // trump selection outcome
     trumpSuit?: TrumpSuit;
+    trumpDeclared: boolean;
     trumpLocked: boolean;
 
     // deal state

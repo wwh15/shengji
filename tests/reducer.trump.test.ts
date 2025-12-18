@@ -108,7 +108,7 @@ describe("DECLARE_TRUMP", () => {
             },
             phase: "DEAL",
             trumpSuit: undefined,
-            roundLeader: undefined, // this is the key
+            roundLeader: undefined,
             trumpLocked: false
         });
 

@@ -18,6 +18,7 @@ export function baseState(overrides: Partial<GameState> = {}): GameState {
         levelRank: "2",
         roundLeader: 0,
         trumpSuit: undefined,
+        trumpDeclared: false,
         trumpLocked: false,
         deck: [],
         dealIndex: 0,
