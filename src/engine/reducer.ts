@@ -2,6 +2,8 @@ import {Action, GameState} from "./types.js";
 import {applyDealOne} from "./reducer/dealOne";
 import {applyDeclareTrump} from "./reducer/declareTrump";
 import {applyOverrideTrump} from "./reducer/overrideTrump";
+import {applyPickupKitty} from "./reducer/pickupKitty";
+import {applyBury} from "./reducer/bury";
 
 export function applyAction(state: GameState, action: Action): GameState {
     switch (action.type) {
@@ -16,12 +18,10 @@ export function applyAction(state: GameState, action: Action): GameState {
             return applyOverrideTrump(state, action)
 
         case "PICKUP_KITTY":
-            // implement later
-            return state;
+            return applyPickupKitty(state, action.seat)
 
         case "BURY":
-            // implement later
-            return state;
+            return applyBury(state, action.seat, action.cardIds)
 
         default: {
             return action;
