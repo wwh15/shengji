@@ -27,5 +27,6 @@ export function applyPickupKitty(state: GameState, seat: Seat): GameState {
             [seat]: nextHand,
         },
         kitty: [],
+        reveal: undefined
     };
 }
