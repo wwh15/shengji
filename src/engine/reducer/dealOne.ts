@@ -1,4 +1,5 @@
 import type { GameState, Seat } from "../types.js";
+import {sortHand} from "../sortHand";
 
 export function applyDealOne(state: GameState): GameState {
     if (state.phase !== "DEAL") {
@@ -19,7 +20,7 @@ export function applyDealOne(state: GameState): GameState {
 
     const nextHands: GameState["hands"] = {
         ...state.hands,
-        [seat]: [...state.hands[seat], cardId],
+        [seat]: sortHand([...state.hands[seat], cardId], state),
     };
 
     const nextDealIndex = state.dealIndex + 1;

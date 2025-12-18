@@ -31,6 +31,11 @@ export type DealResult = {
     kitty: CardId[];
 };
 
+export type Reveal =
+    | { kind: "DECLARE"; seat: Seat; cardIds: [CardId] }
+    | { kind: "OVERRIDE"; seat: Seat; cardIds: [CardId, CardId] };
+
+
 export type GameState = {
     config: GameConfig;
 
@@ -47,6 +52,8 @@ export type GameState = {
     trumpSuit?: TrumpSuit;
     trumpDeclared: boolean; // has a trump been declared
     trumpLocked: boolean; // no overriding allowed anymore
+
+    reveal?: Reveal,
 
     // deal state
     deck: CardId[];        // shuffled 108 card ids

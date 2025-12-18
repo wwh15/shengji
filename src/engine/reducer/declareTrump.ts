@@ -1,4 +1,5 @@
 import type { Action, GameState } from "../types.js";
+import { resortHands } from "./resortHands.js";
 
 type DeclareTrumpAction = Extract<Action, { type: "DECLARE_TRUMP" }>;
 
@@ -28,10 +29,16 @@ export function applyDeclareTrump(state: GameState, action: DeclareTrumpAction):
 
     const nextRoundLeader = state.roundLeader ?? seat;
 
-    return {
+    const nextState: GameState = {
         ...state,
         trumpSuit: card.suit,
         trumpDeclared: true,
         roundLeader: nextRoundLeader,
+        reveal: { kind: "DECLARE", seat, cardIds: [cardId] },
+    };
+
+    return {
+        ...nextState,
+        hands: resortHands(nextState),
     };
 }
