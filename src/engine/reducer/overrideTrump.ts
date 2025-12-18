@@ -1,4 +1,5 @@
 import type { Action, GameState } from "../types.js";
+import { resortHands } from "./resortHands.js";
 
 type OverrideTrumpAction = Extract<Action, { type: "OVERRIDE_TRUMP" }>;
 
@@ -28,12 +29,18 @@ export function applyOverrideTrump(state: GameState, action: OverrideTrumpAction
             throw new Error("cannot override trump: jokers must match");
         }
 
-        return {
+        const nextState: GameState = {
             ...state,
             trumpDeclared: true,
             trumpSuit: undefined,
             trumpLocked: true,
             roundLeader: nextRoundLeader,
+            reveal: { kind: "OVERRIDE", seat, cardIds: [aId, bId] },
+        };
+
+        return {
+            ...nextState,
+            hands: resortHands(nextState),
         };
     }
 
@@ -48,11 +55,17 @@ export function applyOverrideTrump(state: GameState, action: OverrideTrumpAction
         throw new Error("cannot override trump: level cards must be same suit");
     }
 
-    return {
+    const nextState: GameState = {
         ...state,
         trumpDeclared: true,
         trumpSuit: a.suit,
         trumpLocked: true,
         roundLeader: nextRoundLeader,
+        reveal: { kind: "OVERRIDE", seat, cardIds: [aId, bId] },
+    };
+
+    return {
+        ...nextState,
+        hands: resortHands(nextState),
     };
 }
