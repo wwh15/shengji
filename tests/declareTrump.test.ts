@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { applyAction } from "../src/engine/reducer.js";
+import { applyDeclareTrump } from "../src/engine/reducer/declareTrump.js";
 import { baseState, makeNormal, makeJoker } from "./fixtures.js";
 
-describe("DECLARE_TRUMP", () => {
+describe("applyDeclareTrump", () => {
     it("sets trumpSuit to the suit of a level-rank card in the seat's hand", () => {
         const d2 = makeNormal("d2", "D", "2");
         const hA = makeNormal("hA", "H", "A");
@@ -13,12 +13,18 @@ describe("DECLARE_TRUMP", () => {
             hands: { 0: ["d2", "hA"], 1: [], 2: [], 3: [] },
             trumpSuit: undefined,
             trumpLocked: false,
+            trumpDeclared: false,
             phase: "DEAL",
         });
 
-        const s1 = applyAction(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "d2" });
+        const s1 = applyDeclareTrump(s0, {
+            type: "DECLARE_TRUMP",
+            seat: 0,
+            cardId: "d2",
+        });
 
         expect(s1.trumpSuit).toBe("D");
+        expect(s1.trumpDeclared).toBe(true);
     });
 
     it("throws if card is not the level rank", () => {
@@ -28,11 +34,12 @@ describe("DECLARE_TRUMP", () => {
             levelRank: "2",
             cardsById: { hA },
             hands: { 0: ["hA"], 1: [], 2: [], 3: [] },
+            trumpDeclared: false,
             phase: "DEAL",
         });
 
         expect(() =>
-            applyAction(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "hA" })
+            applyDeclareTrump(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "hA" })
         ).toThrow();
     });
 
@@ -43,11 +50,12 @@ describe("DECLARE_TRUMP", () => {
             levelRank: "2",
             cardsById: { bj },
             hands: { 0: ["bj"], 1: [], 2: [], 3: [] },
+            trumpDeclared: false,
             phase: "DEAL",
         });
 
         expect(() =>
-            applyAction(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "bj" })
+            applyDeclareTrump(s0, { type: "DECLARE_TRUMP", seat: 0, cardId: "bj" })
         ).toThrow();
     });
 
@@ -58,35 +66,23 @@ describe("DECLARE_TRUMP", () => {
         const s0 = baseState({
             levelRank: "2",
             cardsById: { s2, h2 },
-            hands: {
-                0: ["s2", "h2"],
-                1: [],
-                2: [],
-                3: [],
-            },
+            hands: { 0: ["s2", "h2"], 1: [], 2: [], 3: [] },
             phase: "DEAL",
-            trumpSuit: undefined,
+            trumpDeclared: false,
             trumpLocked: false,
         });
 
-        // first declaration succeeds
-        const s1 = applyAction(s0, {
+        const s1 = applyDeclareTrump(s0, {
             type: "DECLARE_TRUMP",
             seat: 0,
             cardId: "s2",
         });
 
         expect(s1.trumpSuit).toBe("S");
+        expect(s1.trumpDeclared).toBe(true);
 
-        // simulate trump being locked after declaration
-        const s1Locked = {
-            ...s1,
-            trumpLocked: true,
-        };
-
-        // second declaration should throw
         expect(() =>
-            applyAction(s1Locked, {
+            applyDeclareTrump(s1, {
                 type: "DECLARE_TRUMP",
                 seat: 0,
                 cardId: "h2",
@@ -100,19 +96,14 @@ describe("DECLARE_TRUMP", () => {
         const s0 = baseState({
             levelRank: "2",
             cardsById: { s2 },
-            hands: {
-                0: [],
-                1: [],
-                2: ["s2"],
-                3: [],
-            },
+            hands: { 0: [], 1: [], 2: ["s2"], 3: [] },
             phase: "DEAL",
-            trumpSuit: undefined,
+            trumpDeclared: false,
+            trumpLocked: false,
             roundLeader: undefined,
-            trumpLocked: false
         });
 
-        const s1 = applyAction(s0, {
+        const s1 = applyDeclareTrump(s0, {
             type: "DECLARE_TRUMP",
             seat: 2,
             cardId: "s2",
@@ -120,5 +111,4 @@ describe("DECLARE_TRUMP", () => {
 
         expect(s1.roundLeader).toBe(2);
     });
-
 });

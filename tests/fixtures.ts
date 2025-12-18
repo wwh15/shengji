@@ -11,8 +11,8 @@ export function makeJoker(id: CardId, joker: "BJ" | "SJ", deckIndex: 0 | 1 = 0):
 export function baseState(overrides: Partial<GameState> = {}): GameState {
     const emptyHands = { 0: [], 1: [], 2: [], 3: [] } as Record<Seat, CardId[]>;
 
-    const state: GameState = {
-        config: { kittySize: 8 },
+    return {
+        config: {kittySize: 8},
         cardsById: {},
         phase: "DEAL",
         levelRank: "2",
@@ -29,6 +29,4 @@ export function baseState(overrides: Partial<GameState> = {}): GameState {
         pointsDefenders: 0,
         ...overrides,
     };
-
-    return state;
 }

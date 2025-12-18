@@ -1,4 +1,4 @@
-import { Card, DealResult, Rank, Seat, Suit } from "./types.js";
+import { Card } from "./types.js";
 import { makeCardId, RANKS, SUITS } from "./cards.js";
 
 export function makeDoubleDeck(): { cards: Card[]; cardsById: Record<string, Card> } {
@@ -46,23 +46,4 @@ export function shuffle<T>(arr: T[], rng: () => number): T[] {
         arr[j] = tmp!;
     }
     return arr;
-}
-
-export function deal108(
-    deck: string[], // CardId[]
-    kittySize: 8
-): DealResult {
-    if (deck.length !== 108) throw new Error(`expected 108 cards, got ${deck.length}`);
-
-    const kitty = deck.slice(deck.length - kittySize);
-    const remaining = deck.slice(0, deck.length - kittySize);
-
-    const hands: Record<Seat, string[]> = { 0: [], 1: [], 2: [], 3: [] };
-
-    for (let i = 0; i < remaining.length; i++) {
-        const seat = (i % 4) as Seat;
-        hands[seat].push(remaining[i]!);
-    }
-
-    return { hands: hands as Record<Seat, string[]>, kitty };
 }

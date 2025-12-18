@@ -45,8 +45,8 @@ export type GameState = {
 
     // trump selection outcome
     trumpSuit?: TrumpSuit;
-    trumpDeclared: boolean;
-    trumpLocked: boolean;
+    trumpDeclared: boolean; // has a trump been declared
+    trumpLocked: boolean; // no overriding allowed anymore
 
     // deal state
     deck: CardId[];        // shuffled 108 card ids
